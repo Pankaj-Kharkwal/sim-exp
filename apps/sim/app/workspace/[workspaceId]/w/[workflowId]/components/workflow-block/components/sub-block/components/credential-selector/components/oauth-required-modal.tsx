@@ -235,6 +235,11 @@ export function OAuthRequiredModal({
         requiredScopes,
       })
 
+      if (providerId === 'trello') {
+        window.location.href = '/api/auth/trello/authorize'
+        return
+      }
+
       await client.oauth2.link({
         providerId,
         callbackURL: window.location.href,
