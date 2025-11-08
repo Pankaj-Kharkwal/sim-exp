@@ -56,7 +56,6 @@ export const MistralParseBlock: BlockConfig<MistralParserOutput> = {
       id: 'resultType',
       title: 'Output Format',
       type: 'dropdown',
-      layout: 'full',
       options: [
         { id: 'markdown', label: 'Markdown (Formatted)' },
         { id: 'text', label: 'Plain Text' },
@@ -67,7 +66,6 @@ export const MistralParseBlock: BlockConfig<MistralParserOutput> = {
       id: 'pages',
       title: 'Specific Pages',
       type: 'short-input',
-      layout: 'full',
       placeholder: 'e.g. 0,1,2 (leave empty for all pages)',
     },
     /* 
@@ -78,20 +76,17 @@ export const MistralParseBlock: BlockConfig<MistralParserOutput> = {
       id: 'includeImageBase64',
       title: 'Include PDF Images',
       type: 'switch',
-      layout: 'half',
     },
     {
       id: 'imageLimit',
       title: 'Max Images',
       type: 'short-input',
-      layout: 'half',
       placeholder: 'Maximum number of images to extract',
     },
     {
       id: 'imageMinSize',
       title: 'Min Image Size (px)',
       type: 'short-input',
-      layout: 'half',
       placeholder: 'Min width/height in pixels',
     },
     */

@@ -22,7 +22,6 @@ export const StartTriggerBlock: BlockConfig = {
       id: 'inputFormat',
       title: 'Input Format',
       type: 'input-format',
-      layout: 'full',
       description: 'Add custom fields beyond the built-in input, conversationId, and files fields.',
     },
   ],

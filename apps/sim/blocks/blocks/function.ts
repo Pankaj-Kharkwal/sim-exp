@@ -23,14 +23,12 @@ export const FunctionBlock: BlockConfig<CodeExecutionOutput> = {
     {
       id: 'remoteExecution',
       type: 'switch',
-      layout: 'full',
       title: 'Remote Code Execution',
       description: 'Python/Javascript code run in a sandbox environment. Slower execution times.',
     },
     {
       id: 'language',
       type: 'dropdown',
-      layout: 'full',
       options: [
         { label: getLanguageDisplayName(CodeLanguage.JavaScript), id: CodeLanguage.JavaScript },
         { label: getLanguageDisplayName(CodeLanguage.Python), id: CodeLanguage.Python },
@@ -45,7 +43,6 @@ export const FunctionBlock: BlockConfig<CodeExecutionOutput> = {
     {
       id: 'code',
       type: 'code',
-      layout: 'full',
       wandConfig: {
         enabled: true,
         maintainHistory: true,
