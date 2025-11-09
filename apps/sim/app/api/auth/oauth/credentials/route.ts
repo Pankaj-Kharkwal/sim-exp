@@ -18,7 +18,13 @@ const credentialsQuerySchema = z
   .object({
     provider: z.string().nullish(),
     workflowId: z.string().uuid('Workflow ID must be a valid UUID').nullish(),
-    credentialId: z.string().uuid('Credential ID must be a valid UUID').nullish(),
+    // Note: credentialId is just a string, not necessarily a UUID
+    // Some providers like Trello use alternative ID formats (e.g., CUID2)
+    credentialId: z
+      .string()
+      .min(1, 'Credential ID must not be empty')
+      .max(255, 'Credential ID is too long')
+      .nullish(),
   })
   .refine((data) => data.provider || data.credentialId, {
     message: 'Provider or credentialId is required',
