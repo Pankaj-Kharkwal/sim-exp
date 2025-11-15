@@ -20,8 +20,8 @@
   body {
     margin: 0;
     font-family: 'Inter', 'SF Pro Display', 'SF Pro Text', 'Sora', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: linear-gradient(140deg, #F8FCFF 0%, #EEF6F6 35%, #F9F7F5 100%) !important;
-    color: var(--text-primary) !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%) !important;
+    color: white !important;
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
@@ -38,9 +38,8 @@
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(circle at 20% 20%, rgba(13, 110, 140, 0.14) 0%, transparent 45%),
-      radial-gradient(circle at 85% 15%, rgba(0, 78, 168, 0.14) 0%, transparent 50%),
-      radial-gradient(circle at 40% 80%, rgba(217, 140, 123, 0.18) 0%, transparent 55%);
+      radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(240, 147, 251, 0.3) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
     animation: gradient-shift 24s ease infinite;
@@ -51,8 +50,8 @@
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(circle at 10% 80%, rgba(19, 196, 185, 0.08) 0%, transparent 45%),
-      radial-gradient(circle at 90% 60%, rgba(0, 78, 168, 0.05) 0%, transparent 45%);
+      radial-gradient(circle at 10% 80%, rgba(118, 75, 162, 0.2) 0%, transparent 45%),
+      radial-gradient(circle at 90% 20%, rgba(102, 126, 234, 0.2) 0%, transparent 45%);
     pointer-events: none;
     z-index: 0;
     animation: float 32s ease-in-out infinite;
@@ -64,7 +63,7 @@
     z-index: 1;
   }
 
-  /* Custom Scrollbar - Apple Style */
+  /* Custom Scrollbar - Glassmorphic Style */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -75,13 +74,13 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     transition: background var(--transition-fast);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.3);
   }
 
   .dark ::-webkit-scrollbar-thumb {

@@ -188,25 +188,25 @@ export default function WorkflowEditorPage() {
 
   return (
     <div className='editor-page'>
-      <div className='workspace-aurora workspace-aurora--editor' />
+      <div className='aurora-background' />
 
-      <div className='editor-toolbar glass-panel'>
+      <div className='editor-toolbar glass-panel fade-in'>
         <div className='flex items-center gap-3'>
-          <Button variant='ghost' size='sm' onClick={handleBack}>
+          <button className='glass-button px-4 py-2' onClick={handleBack}>
             <ArrowLeft className='mr-2 h-4 w-4' />
             Back
-          </Button>
+          </button>
           <div className='h-6 w-px bg-white/40' />
           <div>
-            <p className='text-xs text-slate-500'>Workflow</p>
-            <h1 className='text-lg font-semibold text-slate-900'>
+            <p className='text-xs text-white/60'>Workflow</p>
+            <h1 className='text-lg font-semibold text-white'>
               {currentWorkflow?.name || 'Loading...'}
             </h1>
           </div>
         </div>
 
         <div className='flex flex-wrap items-center gap-2'>
-          <Button variant='outline' size='sm' onClick={() => setShowLibrary(!showLibrary)}>
+          <button className='glass-button px-4 py-2' onClick={() => setShowLibrary(!showLibrary)}>
             {showLibrary ? (
               <>
                 <PanelLeftClose className='mr-2 h-4 w-4' />
@@ -218,27 +218,26 @@ export default function WorkflowEditorPage() {
                 Show Library
               </>
             )}
-          </Button>
-          <Button variant='outline' size='sm' onClick={togglePanel}>
+          </button>
+          <button className='glass-button px-4 py-2' onClick={togglePanel}>
             {isPanelOpen ? 'Hide Panel' : 'Show Panel'}
-          </Button>
-          <Button variant='outline' size='sm' onClick={handleSave} disabled={isLoading}>
+          </button>
+          <button className='glass-button px-4 py-2' onClick={handleSave} disabled={isLoading}>
             {isLoading ? (
               <Loader2 className='mr-2 h-4 w-4 animate-spin' />
             ) : (
               <Save className='mr-2 h-4 w-4' />
             )}
             Save
-          </Button>
-          <Button
-            size='sm'
+          </button>
+          <button
+            className='glass-button px-4 py-2 bg-gradient-to-r from-purple-500/30 to-blue-500/30 disabled:opacity-50'
             onClick={handleExecute}
             disabled={isLoading}
-            className='bg-gradient-to-r from-purple-600 to-blue-600 text-white'
           >
             <Play className='mr-2 h-4 w-4' />
             Execute
-          </Button>
+          </button>
         </div>
       </div>
 
@@ -285,23 +284,23 @@ export default function WorkflowEditorPage() {
 
               <Panel position='top-left' className='space-y-2'>
                 {nodes.length === 0 && !showLibrary && (
-                  <div className='rounded-2xl border border-white/40 bg-white/80 p-4 shadow-lg'>
-                    <h3 className='mb-2 font-semibold text-gray-900 text-sm'>
+                  <div className='glass-card p-4 fade-in'>
+                    <h3 className='mb-2 font-semibold text-white text-sm'>
                       Get Started
                     </h3>
-                    <p className='mb-3 text-gray-600 text-xs'>
+                    <p className='mb-3 text-white/70 text-xs'>
                       Show the block library to add blocks to your workflow
                     </p>
-                    <Button size='sm' onClick={() => setShowLibrary(true)} className='w-full'>
+                    <button onClick={() => setShowLibrary(true)} className='glass-button w-full px-4 py-2 text-sm'>
                       <PanelLeft className='mr-2 h-3 w-3' />
                       Show Library
-                    </Button>
+                    </button>
                   </div>
                 )}
               </Panel>
 
               <Panel position='top-right' className='flex gap-2'>
-                <div className='rounded-full bg-white/80 px-3 py-1 text-slate-600 text-xs shadow'>
+                <div className='glass-badge px-4 py-2 text-xs'>
                   {nodes.length} blocks · {edges.length} connections
                 </div>
               </Panel>
