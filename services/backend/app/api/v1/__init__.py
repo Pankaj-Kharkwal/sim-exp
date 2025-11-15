@@ -9,6 +9,7 @@ from app.api.v1 import (
     ai_blocks,
     chat,
     copilot,
+    credentials,
     executions,
     tasks,
     workflows,
@@ -30,6 +31,7 @@ api_router.include_router(executions.router, prefix="/executions", tags=["Execut
 api_router.include_router(tasks.router, prefix="/tasks", tags=["Tasks"])
 api_router.include_router(chat.router)  # Already has prefix and tags
 api_router.include_router(copilot.router)  # Already has prefix and tags
+api_router.include_router(credentials.router)  # Already has prefix and tags
 api_router.include_router(billing.router, prefix="/billing", tags=["Billing"])
 api_router.include_router(knowledge.router, prefix="/knowledge", tags=["Knowledge Base"])
 api_router.include_router(files.router, prefix="/files", tags=["Files & Storage"])
