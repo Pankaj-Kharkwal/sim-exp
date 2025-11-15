@@ -34,6 +34,16 @@ from app.executor.blocks.email import execute_email_block
 from app.executor.blocks.variables import execute_variables_block
 from app.executor.blocks.loop import execute_loop_block
 from app.executor.blocks.parallel import execute_parallel_block
+
+# Integration blocks
+from app.executor.blocks.openai import execute_openai_block
+from app.executor.blocks.anthropic import execute_anthropic_block
+from app.executor.blocks.slack import execute_slack_block
+from app.executor.blocks.gmail import execute_gmail_block
+from app.executor.blocks.github import execute_github_block
+from app.executor.blocks.notion import execute_notion_block
+from app.executor.blocks.google_sheets import execute_google_sheets_block
+
 from app.executor.variable_resolver import resolve_variables
 
 
@@ -74,6 +84,17 @@ class WorkflowExecutor:
 
             # Communication blocks
             "email": execute_email_block,
+            "slack": execute_slack_block,
+            "gmail": execute_gmail_block,
+
+            # AI/LLM blocks
+            "openai": execute_openai_block,
+            "anthropic": execute_anthropic_block,
+
+            # Integration blocks
+            "github": execute_github_block,
+            "notion": execute_notion_block,
+            "google_sheets": execute_google_sheets_block,
 
             # Variables blocks
             "variables": execute_variables_block,
