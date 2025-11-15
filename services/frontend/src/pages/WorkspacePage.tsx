@@ -48,7 +48,10 @@ export default function WorkspacePage() {
 
   return (
     <PageContainer>
-      <div className="flex h-screen">
+      {/* Aurora Background */}
+      <div className="aurora-background" />
+
+      <div className="flex h-screen relative z-10">
         {/* Modular Sidebar */}
         <Sidebar
           logo={<SidebarLogo title="Sim Workspace" icon={<Sparkles className="h-5 w-5 text-white" />} />}
@@ -65,7 +68,7 @@ export default function WorkspacePage() {
         />
 
         {/* Main Content Area - Clean and Simple */}
-        <main className="flex-1 overflow-auto bg-gradient-to-br from-background via-background/98 to-accent/5">
+        <main className="flex-1 overflow-auto">
           <div className="p-8">
             <Outlet />
           </div>
