@@ -1,0 +1,225 @@
+# DETAILED FILE STRUCTURE - MCP/Tools Implementation
+
+## ABSOLUTE FILE PATHS
+
+### FRONTEND COMPONENTS
+
+1. C:\Users\pkhar\Documents\sim\apps\sim\app\workspace\[workspaceId]\w\[workflowId]\components\workflow-block\components\sub-block\components\tool-input\tool-input.tsx
+   - 1993 lines
+   - Main tool selection and configuration component
+
+2. C:\Users\pkhar\Documents\sim\apps\sim\app\workspace\[workspaceId]\w\[workflowId]\components\workflow-block\components\sub-block\components\tool-input\components\mcp-server-modal\mcp-server-modal.tsx
+   - MCP server configuration modal
+
+3. C:\Users\pkhar\Documents\sim\apps\sim\app\workspace\[workspaceId]\w\[workflowId]\components\workflow-block\components\sub-block\components\tool-input\components\mcp-tools-list.tsx
+   - MCP tools list display
+
+4. C:\Users\pkhar\Documents\sim\apps\sim\app\workspace\[workspaceId]\w\[workflowId]\components\workflow-block\components\sub-block\components\tool-input\components\tool-command\tool-command.tsx
+   - Tool search/command interface
+
+5. C:\Users\pkhar\Documents\sim\apps\sim\app\workspace\[workspaceId]\w\[workflowId]\components\workflow-block\components\sub-block\components\tool-input\components\tool-credential-selector.tsx
+   - OAuth credential selector
+
+6. C:\Users\pkhar\Documents\sim\apps\sim\app\workspace\[workspaceId]\w\[workflowId]\components\workflow-block\components\sub-block\components\tool-input\components\custom-tool-modal\custom-tool-modal.tsx
+   - Custom tool creation/editing
+
+7. C:\Users\pkhar\Documents\sim\apps\sim\app\workspace\[workspaceId]\w\[workflowId]\components\workflow-block\components\sub-block\components\mcp-dynamic-args\mcp-dynamic-args.tsx
+   - Dynamic parameter input rendering
+
+8. C:\Users\pkhar\Documents\sim\apps\sim\app\workspace\[workspaceId]\w\[workflowId]\components\workflow-block\components\sub-block\components\mcp-server-modal\mcp-server-selector.tsx
+   - Server selector subblock
+
+9. C:\Users\pkhar\Documents\sim\apps\sim\app\workspace\[workspaceId]\w\[workflowId]\components\workflow-block\components\sub-block\components\mcp-server-modal\mcp-tool-selector.tsx
+   - Tool selector subblock
+
+10. C:\Users\pkhar\Documents\sim\apps\sim\app\workspace\[workspaceId]\w\components\sidebar\components\settings-modal\components\mcp\mcp.tsx
+    - MCP server management page in settings
+
+### BACKEND API ROUTES
+
+1. C:\Users\pkhar\Documents\sim\apps\sim\app\api\mcp\servers\route.ts
+   - GET: List all MCP servers
+   - POST: Create new MCP server
+
+2. C:\Users\pkhar\Documents\sim\apps\sim\app\api\mcp\servers\[id]\route.ts
+   - GET: Get specific server
+   - PUT: Update server
+   - DELETE: Delete server
+
+3. C:\Users\pkhar\Documents\sim\apps\sim\app\api\mcp\servers\[id]\refresh\route.ts
+   - POST: Refresh server tools
+
+4. C:\Users\pkhar\Documents\sim\apps\sim\app\api\mcp\servers\test-connection\route.ts
+   - POST: Test server connectivity
+
+5. C:\Users\pkhar\Documents\sim\apps\sim\app\api\mcp\tools\discover\route.ts
+   - GET: Discover tools (with optional refresh)
+   - POST: Refresh specific servers
+
+6. C:\Users\pkhar\Documents\sim\apps\sim\app\api\mcp\tools\execute\route.ts
+   - POST: Execute tool on server
+
+### CORE MCP LIBRARY
+
+1. C:\Users\pkhar\Documents\sim\apps\sim\lib\mcp\types.ts
+   - 272 lines
+   - JSON-RPC 2.0 types
+   - MCP protocol types
+   - Security framework
+   - Error types
+
+2. C:\Users\pkhar\Documents\sim\apps\sim\lib\mcp\service.ts
+   - 400+ lines
+   - MCP service class
+   - Tool caching
+   - Discovery and execution
+   - Cache management
+
+3. C:\Users\pkhar\Documents\sim\apps\sim\lib\mcp\client.ts
+   - 500+ lines
+   - JSON-RPC 2.0 client
+   - Connection management
+   - Protocol version negotiation
+   - Tool execution
+
+4. C:\Users\pkhar\Documents\sim\apps\sim\lib\mcp\middleware.ts
+   - Auth middleware for API routes
+   - Request context extraction
+
+5. C:\Users\pkhar\Documents\sim\apps\sim\lib\mcp\utils.ts
+   - 143 lines
+   - Constants (timeouts, cache settings)
+   - Response formatting
+   - Parameter validation
+   - Tool ID handling
+
+6. C:\Users\pkhar\Documents\sim\apps\sim\lib\mcp\url-validator.ts
+   - URL validation for MCP servers
+
+### HOOKS
+
+1. C:\Users\pkhar\Documents\sim\apps\sim\hooks\use-mcp-tools.ts
+   - Tool discovery hook
+   - Tool caching
+   - Auto-refresh mechanism
+
+2. C:\Users\pkhar\Documents\sim\apps\sim\hooks\use-mcp-server-test.ts
+   - Server connection testing
+
+### STORES (Zustand State Management)
+
+1. C:\Users\pkhar\Documents\sim\apps\sim\stores\mcp-servers\store.ts
+   - MCP server state management
+   - CRUD operations
+
+2. C:\Users\pkhar\Documents\sim\apps\sim\stores\mcp-servers\types.ts
+   - 70 lines
+   - McpServerWithStatus
+   - McpServersState
+   - McpServersActions
+
+3. C:\Users\pkhar\Documents\sim\apps\sim\stores\custom-tools\store.ts
+   - Custom tool management
+
+4. C:\Users\pkhar\Documents\sim\apps\sim\stores\custom-tools\types.ts
+   - 42 lines
+   - CustomToolSchema
+   - CustomToolDefinition
+   - CustomToolsStore
+
+### BLOCK CONFIGURATION
+
+1. C:\Users\pkhar\Documents\sim\apps\sim\blocks\blocks\mcp.ts
+   - 102 lines
+   - MCP block type definition
+   - Subblock configuration
+
+2. C:\Users\pkhar\Documents\sim\apps\sim\blocks\types.ts
+   - 247 lines
+   - SubBlockType enums
+   - ParamConfig, SubBlockConfig
+   - Tool-related types
+
+## KEY INTERFACE DEFINITIONS
+
+### McpServerWithStatus
+- Properties: id, name, description, transport, url, headers, timeout, retries
+- Status: enabled, connectionStatus, lastError, toolCount
+- Metadata: createdAt, updatedAt, lastConnected, totalRequests, lastUsed, lastToolsRefresh
+- Soft Delete: deletedAt
+
+### McpTool
+- name: string
+- description: string
+- inputSchema: JSON schema for parameters
+- serverId: string
+- serverName: string
+
+### StoredTool (in workflow)
+- type: 'mcp' | 'custom-tool' | blockType
+- title: string
+- toolId: string (format: mcp-{serverId}-{toolName})
+- params: Record<string, string>
+- isExpanded: boolean
+- usageControl: 'auto' | 'force' | 'none'
+- schema, code: for custom tools
+
+## IMPORTANT PATTERNS
+
+### Tool ID Format
+- Built-in tools: blockType (e.g., "slack", "gmail")
+- Custom tools: "custom-{functionName}"
+- MCP tools: "mcp-{serverId}-{toolName}"
+
+### API Response Format
+```
+{
+  success: boolean
+  data?: T
+  error?: string
+}
+```
+
+### Subblock Types (MCP Block)
+1. mcp-server-selector: Choose MCP server
+2. mcp-tool-selector: Choose tool from server
+3. mcp-dynamic-args: Input tool parameters
+
+### Parameter Types in MCP
+- string, number, boolean
+- array, object
+- enum (with options)
+- Required vs optional
+
+### Transport Types
+- streamable-http (primary)
+- http (basic)
+- sse (server-sent events)
+
+### Protocol Versions
+- 2025-06-18 (latest, OAuth 2.1)
+- 2025-03-26 (Streamable HTTP)
+- 2024-11-05 (legacy)
+
+## EXECUTION FLOW
+
+1. User selects tool in workflow block
+2. Configures parameters
+3. Workflow execution engine encounters tool block
+4. Parameters resolved (variables substituted)
+5. Type coercion applied
+6. Tool ID parsed (mcp-serverId-toolName)
+7. POST /api/mcp/tools/execute called
+8. McpClient connects to MCP server
+9. Sends tool execution request
+10. Server returns McpToolResult
+11. Result processed and returned to workflow
+
+## CACHING STRATEGY
+
+- TTL: 5 minutes (MCP_CONSTANTS.CACHE_TIMEOUT)
+- Max entries: 1000
+- Eviction: LRU (Least Recently Used)
+- Cleanup: Every 5 minutes
+- Manual refresh: Via button in settings
+- Auto-refresh: Every 5 minutes if tools loaded
