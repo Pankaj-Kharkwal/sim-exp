@@ -1,28 +1,18 @@
-const instances: Record<string, any> = {}
+// Tool manager stub - TODO: Implement full tool management
 
-let syncStateFn: ((toolCallId: string, nextState: any, options?: { result?: any }) => void) | null =
-  null
+import { BaseClientTool } from './base-tool'
 
-export function registerClientTool(toolCallId: string, instance: any) {
-  instances[toolCallId] = instance
+const tools = new Map<string, BaseClientTool>()
+
+export function registerClientTool(tool: BaseClientTool): void {
+  tools.set(tool.name, tool)
 }
 
-export function getClientTool(toolCallId: string): any | undefined {
-  return instances[toolCallId]
+export function getClientTool(name: string): BaseClientTool | undefined {
+  return tools.get(name)
 }
 
-export function unregisterClientTool(toolCallId: string) {
-  delete instances[toolCallId]
-}
-
-export function registerToolStateSync(
-  fn: (toolCallId: string, nextState: any, options?: { result?: any }) => void
-) {
-  syncStateFn = fn
-}
-
-export function syncToolState(toolCallId: string, nextState: any, options?: { result?: any }) {
-  try {
-    syncStateFn?.(toolCallId, nextState, options)
-  } catch {}
+export function registerToolStateSync(callback: (state: any) => void): void {
+  // TODO: Implement tool state synchronization
+  console.warn('registerToolStateSync not yet implemented')
 }

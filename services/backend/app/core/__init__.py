@@ -1,1 +1,1 @@
-# Core utilities
+"""Core configuration and utilities"""

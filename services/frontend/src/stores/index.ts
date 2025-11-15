@@ -1,157 +1,249 @@
+'use client'
+
+import { useEffect } from 'react'
 import { createLogger } from '@/lib/logs/console/logger'
+import { useCopilotStore } from '@/stores/copilot/store'
+import { useCustomToolsStore } from '@/stores/custom-tools/store'
+import { useExecutionStore } from '@/stores/execution/store'
+import { useConsoleStore } from '@/stores/panel/console/store'
+import { useVariablesStore } from '@/stores/panel/variables/store'
+import { useEnvironmentStore } from '@/stores/settings/environment/store'
+import { useSubscriptionStore } from '@/stores/subscription/store'
 import { useWorkflowRegistry } from '@/stores/workflows/registry/store'
-import { mergeSubblockState } from '@/stores/workflows/utils'
+import { useSubBlockStore } from '@/stores/workflows/subblock/store'
 import { useWorkflowStore } from '@/stores/workflows/workflow/store'
-import type { BlockState, WorkflowState } from '@/stores/workflows/workflow/types'
 
-const logger = createLogger('Workflows')
+const logger = createLogger('Stores')
+
+// Track initialization state
+let isInitializing = false
+let appFullyInitialized = false
+let dataInitialized = false // Flag for actual data loading completion
 
 /**
- * Get a workflow with its state merged in by ID
- * Note: Since localStorage has been removed, this only works for the active workflow
- * @param workflowId ID of the workflow to retrieve
- * @returns The workflow with merged state values or null if not found/not active
+ * Initialize the application state and sync system
+ * localStorage persistence has been removed - relies on DB and Zustand stores only
  */
-export function getWorkflowWithValues(workflowId: string) {
-  const { workflows } = useWorkflowRegistry.getState()
-  const activeWorkflowId = useWorkflowRegistry.getState().activeWorkflowId
-  const currentState = useWorkflowStore.getState()
+async function initializeApplication(): Promise<void> {
+  if (typeof window === 'undefined' || isInitializing) return
 
-  if (!workflows[workflowId]) {
-    logger.warn(`Workflow ${workflowId} not found`)
-    return null
-  }
+  isInitializing = true
+  appFullyInitialized = false
 
-  // Since localStorage persistence has been removed, only return data for active workflow
-  if (workflowId !== activeWorkflowId) {
-    logger.warn(`Cannot get state for non-active workflow ${workflowId} - localStorage removed`)
-    return null
-  }
+  // Track initialization start time
+  const initStartTime = Date.now()
 
-  const metadata = workflows[workflowId]
+  try {
+    // Load environment variables directly from DB
+    await useEnvironmentStore.getState().loadEnvironmentVariables()
 
-  // Get deployment status from registry
-  const deploymentStatus = useWorkflowRegistry.getState().getWorkflowDeploymentStatus(workflowId)
+    // Load custom tools from server
+    await useCustomToolsStore.getState().loadCustomTools()
 
-  // Use the current state from the store (only available for active workflow)
-  const workflowState: WorkflowState = {
-    // Use the main store's method to get the base workflow state
-    ...useWorkflowStore.getState().getWorkflowState(),
-    // Override deployment fields with registry-specific deployment status
-    isDeployed: deploymentStatus?.isDeployed || false,
-    deployedAt: deploymentStatus?.deployedAt,
-  }
+    // Mark data as initialized only after sync managers have loaded data from DB
+    dataInitialized = true
 
-  // Merge the subblock values for this specific workflow
-  const mergedBlocks = mergeSubblockState(workflowState.blocks, workflowId)
+    // Log initialization timing information
+    const initDuration = Date.now() - initStartTime
+    logger.info(`Application initialization completed in ${initDuration}ms`)
 
-  return {
-    id: workflowId,
-    name: metadata.name,
-    description: metadata.description,
-    color: metadata.color || '#3972F6',
-    workspaceId: metadata.workspaceId,
-    folderId: metadata.folderId,
-    state: {
-      blocks: mergedBlocks,
-      edges: workflowState.edges,
-      loops: workflowState.loops,
-      parallels: workflowState.parallels,
-      lastSaved: workflowState.lastSaved,
-      isDeployed: workflowState.isDeployed,
-      deployedAt: workflowState.deployedAt,
-    },
+    // Mark application as fully initialized
+    appFullyInitialized = true
+  } catch (error) {
+    logger.error('Error during application initialization:', { error })
+    // Still mark as initialized to prevent being stuck in initializing state
+    appFullyInitialized = true
+    // But don't mark data as initialized on error
+    dataInitialized = false
+  } finally {
+    isInitializing = false
   }
 }
 
 /**
- * Get a specific block with its subblock values merged in
- * @param blockId ID of the block to retrieve
- * @returns The block with merged subblock values or null if not found
+ * Checks if application is fully initialized
  */
-export function getBlockWithValues(blockId: string): BlockState | null {
-  const workflowState = useWorkflowStore.getState()
-  const activeWorkflowId = useWorkflowRegistry.getState().activeWorkflowId
-
-  if (!activeWorkflowId || !workflowState.blocks[blockId]) return null
-
-  const mergedBlocks = mergeSubblockState(workflowState.blocks, activeWorkflowId, blockId)
-  return mergedBlocks[blockId] || null
+export function isAppInitialized(): boolean {
+  return appFullyInitialized
 }
 
 /**
- * Get all workflows with their values merged
- * Note: Since localStorage has been removed, this only includes the active workflow state
- * @returns An object containing workflows, with state only for the active workflow
+ * Checks if data has been loaded from the database
+ * This should be checked before any sync operations
  */
-export function getAllWorkflowsWithValues() {
-  const { workflows } = useWorkflowRegistry.getState()
-  const result: Record<string, any> = {}
-  const activeWorkflowId = useWorkflowRegistry.getState().activeWorkflowId
-  const currentState = useWorkflowStore.getState()
+export function isDataInitialized(): boolean {
+  return dataInitialized
+}
 
-  // Only sync the active workflow to ensure we always send valid state data
-  if (activeWorkflowId && workflows[activeWorkflowId]) {
-    const metadata = workflows[activeWorkflowId]
-
-    // Get deployment status from registry
-    const deploymentStatus = useWorkflowRegistry
-      .getState()
-      .getWorkflowDeploymentStatus(activeWorkflowId)
-
-    // Ensure state has all required fields for Zod validation
-    const workflowState: WorkflowState = {
-      // Use the main store's method to get the base workflow state with fallback values
-      ...useWorkflowStore.getState().getWorkflowState(),
-      // Ensure fallback values for safer handling
-      blocks: currentState.blocks || {},
-      edges: currentState.edges || [],
-      loops: currentState.loops || {},
-      parallels: currentState.parallels || {},
-      lastSaved: currentState.lastSaved || Date.now(),
-      // Override deployment fields with registry-specific deployment status
-      isDeployed: deploymentStatus?.isDeployed || false,
-      deployedAt: deploymentStatus?.deployedAt,
-    }
-
-    // Merge the subblock values for this specific workflow
-    const mergedBlocks = mergeSubblockState(workflowState.blocks, activeWorkflowId)
-
-    // Include the API key in the state if it exists in the deployment status
-    const apiKey = deploymentStatus?.apiKey
-
-    result[activeWorkflowId] = {
-      id: activeWorkflowId,
-      name: metadata.name,
-      description: metadata.description,
-      color: metadata.color || '#3972F6',
-      folderId: metadata.folderId,
-      state: {
-        blocks: mergedBlocks,
-        edges: workflowState.edges,
-        loops: workflowState.loops,
-        parallels: workflowState.parallels,
-        lastSaved: workflowState.lastSaved,
-        isDeployed: workflowState.isDeployed,
-        deployedAt: workflowState.deployedAt,
-      },
-      // Include API key if available
-      apiKey,
-    }
-
-    // Only include workspaceId if it's not null/undefined
-    if (metadata.workspaceId) {
-      result[activeWorkflowId].workspaceId = metadata.workspaceId
+/**
+ * Handle application cleanup before unload
+ */
+function handleBeforeUnload(event: BeforeUnloadEvent): void {
+  // Check if we're on an authentication page and skip confirmation if we are
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname
+    // Skip confirmation for auth-related pages
+    if (
+      path === '/login' ||
+      path === '/signup' ||
+      path === '/reset-password' ||
+      path === '/verify'
+    ) {
+      return
     }
   }
 
-  return result
+  // Standard beforeunload pattern
+  event.preventDefault()
+  event.returnValue = ''
 }
 
-export { useWorkflowRegistry } from '@/stores/workflows/registry/store'
-export type { WorkflowMetadata } from '@/stores/workflows/registry/types'
-export { useSubBlockStore } from '@/stores/workflows/subblock/store'
-export type { SubBlockStore } from '@/stores/workflows/subblock/types'
-export { mergeSubblockState } from '@/stores/workflows/utils'
-export { useWorkflowStore } from '@/stores/workflows/workflow/store'
-export type { WorkflowState } from '@/stores/workflows/workflow/types'
+/**
+ * Clean up sync system
+ */
+function cleanupApplication(): void {
+  window.removeEventListener('beforeunload', handleBeforeUnload)
+  // Note: No sync managers to dispose - Socket.IO handles cleanup
+}
+
+/**
+ * Clear all user data when signing out
+ * localStorage persistence has been removed
+ */
+export async function clearUserData(): Promise<void> {
+  if (typeof window === 'undefined') return
+
+  try {
+    // Note: No sync managers to dispose - Socket.IO handles cleanup
+
+    // Reset all stores to their initial state
+    resetAllStores()
+
+    // Clear localStorage except for essential app settings (minimal usage)
+    const keysToKeep = ['next-favicon', 'theme']
+    const keysToRemove = Object.keys(localStorage).filter((key) => !keysToKeep.includes(key))
+    keysToRemove.forEach((key) => localStorage.removeItem(key))
+
+    // Reset application initialization state
+    appFullyInitialized = false
+    dataInitialized = false
+
+    logger.info('User data cleared successfully')
+  } catch (error) {
+    logger.error('Error clearing user data:', { error })
+  }
+}
+
+/**
+ * Hook to manage application lifecycle
+ */
+export function useAppInitialization() {
+  useEffect(() => {
+    // Use Promise to handle async initialization
+    initializeApplication()
+
+    return () => {
+      cleanupApplication()
+    }
+  }, [])
+}
+
+/**
+ * Hook to reinitialize the application after successful login
+ * Use this in the login success handler or post-login page
+ */
+export function useLoginInitialization() {
+  useEffect(() => {
+    reinitializeAfterLogin()
+  }, [])
+}
+
+/**
+ * Reinitialize the application after login
+ * This ensures we load fresh data from the database for the new user
+ */
+export async function reinitializeAfterLogin(): Promise<void> {
+  if (typeof window === 'undefined') return
+
+  try {
+    // Reset application initialization state
+    appFullyInitialized = false
+    dataInitialized = false
+
+    // Note: No sync managers to dispose - Socket.IO handles cleanup
+
+    // Clean existing state to avoid stale data
+    resetAllStores()
+
+    // Reset initialization flags to force a fresh load
+    isInitializing = false
+
+    // Reinitialize the application
+    await initializeApplication()
+
+    logger.info('Application reinitialized after login')
+  } catch (error) {
+    logger.error('Error reinitializing application:', { error })
+  }
+}
+
+// Initialize immediately when imported on client
+if (typeof window !== 'undefined') {
+  initializeApplication()
+}
+
+// Export all stores
+export {
+  useWorkflowStore,
+  useWorkflowRegistry,
+  useEnvironmentStore,
+  useExecutionStore,
+  useConsoleStore,
+  useCopilotStore,
+  useCustomToolsStore,
+  useVariablesStore,
+  useSubBlockStore,
+  useSubscriptionStore,
+}
+
+// Helper function to reset all stores
+export const resetAllStores = () => {
+  // Reset all stores to initial state
+  useWorkflowRegistry.setState({
+    workflows: {},
+    activeWorkflowId: null,
+    isLoading: false,
+    error: null,
+  })
+  useWorkflowStore.getState().clear()
+  useSubBlockStore.getState().clear()
+  useEnvironmentStore.setState({
+    variables: {},
+    isLoading: false,
+    error: null,
+  })
+  useExecutionStore.getState().reset()
+  useConsoleStore.setState({ entries: [], isOpen: false })
+  useCopilotStore.setState({ messages: [], isSendingMessage: false, error: null })
+  useCustomToolsStore.setState({ tools: {} })
+  // Variables store has no tracking to reset; registry hydrates
+  useSubscriptionStore.getState().reset() // Reset subscription store
+}
+
+// Helper function to log all store states
+export const logAllStores = () => {
+  const state = {
+    workflow: useWorkflowStore.getState(),
+    workflowRegistry: useWorkflowRegistry.getState(),
+    environment: useEnvironmentStore.getState(),
+    execution: useExecutionStore.getState(),
+    console: useConsoleStore.getState(),
+    copilot: useCopilotStore.getState(),
+    customTools: useCustomToolsStore.getState(),
+    subBlock: useSubBlockStore.getState(),
+    variables: useVariablesStore.getState(),
+    subscription: useSubscriptionStore.getState(),
+  }
+
+  return state
+}
