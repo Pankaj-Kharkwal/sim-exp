@@ -1,10 +1,12 @@
 /**
- * Pankh AI design tokens + utilities
- * Premium glass surfaces, gradients, and animation helpers
+ * Enterprise AI Platform Design System
+ * Professional design tokens with glassmorphic surfaces
+ * Combines best of Pankh AI glass effects with enterprise-grade tokens
  */
 
 @layer base {
   :root {
+    /* Legacy Pankh AI brand colors - kept for compatibility */
     --brand-peacock: #0D6E8C;
     --brand-emerald: #1FA387;
     --brand-aqua: #13C4B9;
@@ -12,28 +14,78 @@
     --metal-rose: #D98C7B;
     --metal-copper: #C7724F;
 
+    /* New Enterprise Primary/Secondary/Accent system */
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --primary-active: #4338ca;
+    --primary-light: #eef2ff;
+
+    --secondary: #8b5cf6;
+    --secondary-hover: #7c3aed;
+    --secondary-active: #6d28d9;
+    --secondary-light: #f5f3ff;
+
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-light: #eff6ff;
+
+    /* Semantic States */
+    --success: #22c55e;
+    --success-bg: #f0fdf4;
+    --success-border: #86efac;
+
+    --warning-semantic: #f59e0b;
+    --warning-bg: #fffbeb;
+    --warning-border: #fcd34d;
+
+    --error: #ef4444;
+    --error-bg: #fef2f2;
+    --error-border: #fca5a5;
+
+    --info: #3b82f6;
+    --info-bg: #eff6ff;
+    --info-border: #93c5fd;
+
+    /* Workflow Node Colors */
+    --node-agent: #8b5cf6;
+    --node-api: #3b82f6;
+    --node-data: #22c55e;
+    --node-logic: #f59e0b;
+    --node-trigger: #ec4899;
+    --node-integration: #06b6d4;
+
+    /* Base backgrounds & surfaces */
     --bg-1: #FFFFFF;
     --bg-2: #F2F4F7;
     --bg-3: #DADDE2;
     --bg-inverse: #0D0F10;
+
+    /* Glassmorphic surfaces - Premium effects */
     --surface-glass: rgba(255, 255, 255, 0.75);
     --surface-glass-strong: rgba(255, 255, 255, 0.92);
     --surface-glass-pure: rgba(255, 255, 255, 0.98);
     --surface-dark-glass: rgba(13, 15, 16, 0.65);
     --surface-dark-glass-strong: rgba(13, 15, 16, 0.85);
 
+    /* Text hierarchy */
     --text-primary: #0D0F10;
     --text-secondary: #2B2E33;
     --text-muted: #5B616C;
     --text-inverse: #F8FAFC;
 
+    /* Borders */
     --border-subtle: rgba(13, 110, 140, 0.08);
     --border-strong: rgba(13, 110, 140, 0.24);
 
-    --shadow-sm: 0 10px 30px rgba(13, 110, 140, 0.08);
-    --shadow-md: 0 20px 50px rgba(13, 110, 140, 0.12);
-    --shadow-lg: 0 40px 70px rgba(13, 110, 140, 0.15);
-    --shadow-xl: 0 50px 90px rgba(0, 78, 168, 0.25);
+    /* Enterprise shadow scale */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+    --shadow-focus: 0 0 0 3px var(--primary-light);
 
     --blur-sm: blur(12px);
     --blur-md: blur(18px);
@@ -76,23 +128,78 @@
   }
 
   .dark {
+    /* Base backgrounds & surfaces */
     --bg-1: #0D0F10;
     --bg-2: #16181C;
     --bg-3: #2B2E33;
+    --bg-inverse: #FFFFFF;
+
+    /* Glassmorphic surfaces - Premium effects */
     --surface-glass: rgba(22, 24, 28, 0.75);
     --surface-glass-strong: rgba(22, 24, 28, 0.9);
     --surface-glass-pure: rgba(22, 24, 28, 0.96);
+    --surface-dark-glass: rgba(255, 255, 255, 0.08);
+    --surface-dark-glass-strong: rgba(255, 255, 255, 0.15);
 
+    /* Text hierarchy */
     --text-primary: #F2F4F7;
     --text-secondary: #D5D7DD;
     --text-muted: #9BA0AC;
+    --text-inverse: #0D0F10;
 
+    /* Borders */
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-strong: rgba(255, 255, 255, 0.18);
 
+    /* Enterprise Primary/Secondary/Accent - Lighter for dark mode */
+    --primary: #6366f1;
+    --primary-hover: #818cf8;
+    --primary-active: #a5b4fc;
+    --primary-light: #1e1b4b;
+
+    --secondary: #8b5cf6;
+    --secondary-hover: #a78bfa;
+    --secondary-active: #c4b5fd;
+    --secondary-light: #2e1065;
+
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --accent-light: #1e3a8a;
+
+    /* Semantic States - Dark mode variants */
+    --success: #22c55e;
+    --success-bg: #052e16;
+    --success-border: #166534;
+
+    --warning-semantic: #f59e0b;
+    --warning-bg: #451a03;
+    --warning-border: #92400e;
+
+    --error: #ef4444;
+    --error-bg: #450a0a;
+    --error-border: #991b1b;
+
+    --info: #3b82f6;
+    --info-bg: #172554;
+    --info-border: #1e40af;
+
+    /* Workflow Node Colors - Same across light/dark */
+    --node-agent: #8b5cf6;
+    --node-api: #3b82f6;
+    --node-data: #22c55e;
+    --node-logic: #f59e0b;
+    --node-trigger: #ec4899;
+    --node-integration: #06b6d4;
+
+    /* Enterprise shadow scale - Enhanced for dark mode */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
     --shadow-sm: 0 8px 25px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 20px 45px rgba(0, 0, 0, 0.45);
     --shadow-lg: 0 30px 60px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 35px 70px rgba(0, 0, 0, 0.55);
+    --shadow-2xl: 0 40px 80px rgba(0, 0, 0, 0.6);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.3);
+    --shadow-focus: 0 0 0 3px var(--primary-light);
 
     --ring: 168 73% 65%;
     --background: 210 28% 6%;
