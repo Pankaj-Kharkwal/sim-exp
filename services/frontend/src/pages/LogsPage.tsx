@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Search,
   CheckCircle,
@@ -14,6 +11,8 @@ import {
   PlayCircle,
   StopCircle,
   Calendar,
+  X,
+  ChevronRight
 } from 'lucide-react'
 import { useExecutionStore } from '@/stores/executionStore'
 import { formatDistanceToNow } from 'date-fns'
@@ -62,27 +61,27 @@ export default function LogsPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle className="h-5 w-5 text-green-600" />
+        return <CheckCircle className="h-5 w-5 text-green-300" />
       case 'failed':
-        return <XCircle className="h-5 w-5 text-red-600" />
+        return <XCircle className="h-5 w-5 text-red-300" />
       case 'running':
-        return <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+        return <Loader2 className="h-5 w-5 animate-spin text-blue-300" />
       case 'cancelled':
-        return <StopCircle className="h-5 w-5 text-gray-600" />
+        return <StopCircle className="h-5 w-5 text-white/60" />
       case 'pending':
-        return <Clock className="h-5 w-5 text-yellow-600" />
+        return <Clock className="h-5 w-5 text-yellow-300" />
       default:
-        return <Clock className="h-5 w-5 text-gray-600" />
+        return <Clock className="h-5 w-5 text-white/60" />
     }
   }
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      completed: 'bg-green-100 text-green-800',
-      failed: 'bg-red-100 text-red-800',
-      running: 'bg-blue-100 text-blue-800',
-      cancelled: 'bg-gray-100 text-gray-800',
-      pending: 'bg-yellow-100 text-yellow-800',
+      completed: 'bg-green-500/20 text-green-300',
+      failed: 'bg-red-500/20 text-red-300',
+      running: 'bg-blue-500/20 text-blue-300',
+      cancelled: 'bg-white/10 text-white/70',
+      pending: 'bg-yellow-500/20 text-yellow-300',
     }
     return (
       <span
@@ -108,147 +107,155 @@ export default function LogsPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="border-b bg-white px-8 py-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="font-bold text-2xl">Execution Logs</h1>
-            <p className="mt-1 text-gray-600 text-sm">
-              Monitor and debug your workflow executions
-            </p>
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter className="mr-2 h-4 w-4" />
-            Filters
-          </Button>
-        </div>
-
-        {showFilters && (
-          <div className="mt-4 flex gap-2">
-            {['all', 'running', 'completed', 'failed', 'cancelled', 'pending'].map(
-              (status) => (
-                <Button
-                  key={status}
-                  variant={statusFilter === status ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setStatusFilter(status)}
-                >
-                  {status === 'all' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)}
-                </Button>
-              )
-            )}
-          </div>
-        )}
-      </div>
-
-      <div className="p-8">
-        {error && (
-          <div className="mb-6 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
-            <AlertCircle className="h-5 w-5" />
-            <span>{error}</span>
+      <div className="mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="mb-6 fade-in">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-bold text-3xl text-white">Execution Logs</h1>
+              <p className="mt-2 text-white/70">
+                Monitor and debug your workflow executions
+              </p>
+            </div>
             <button
-              onClick={clearError}
-              className="ml-auto text-red-600 hover:text-red-800"
+              onClick={() => setShowFilters(!showFilters)}
+              className={cn('glass-button px-4 py-2', showFilters && 'bg-purple-500/30')}
             >
-              ×
+              <Filter className="mr-2 h-4 w-4" />
+              Filters
             </button>
           </div>
+
+          {showFilters && (
+            <div className="mt-4 flex flex-wrap gap-2 fade-in">
+              {['all', 'running', 'completed', 'failed', 'cancelled', 'pending'].map(
+                (status) => (
+                  <button
+                    key={status}
+                    className={cn(
+                      'glass-button px-3 py-1.5 text-sm',
+                      statusFilter === status && 'bg-purple-500/30'
+                    )}
+                    onClick={() => setStatusFilter(status)}
+                  >
+                    {status === 'all' ? 'All' : status.charAt(0).toUpperCase() + status.slice(1)}
+                  </button>
+                )
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="glass-card mb-6 border-2 border-red-500/30 bg-red-500/10 p-4 fade-in">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-red-300" />
+              <span className="text-sm text-red-200">{error}</span>
+              <button onClick={clearError} className="glass-button ml-auto p-2">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         )}
 
-        <div className="mb-6 relative">
-          <Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-gray-400" />
-          <Input
+        {/* Search */}
+        <div className="relative mb-6 fade-in" style={{ animationDelay: '0.1s' }}>
+          <Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-white/40" />
+          <input
             placeholder="Search executions..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className="glass-input w-full pl-10"
           />
         </div>
 
+        {/* Executions List */}
         {isLoading && executions.length === 0 ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-white/40" />
           </div>
         ) : filteredExecutions.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <PlayCircle className="mb-4 h-12 w-12 text-gray-400" />
-            <h3 className="mb-2 font-semibold text-gray-900 text-lg">
+          <div className="glass-card flex flex-col items-center justify-center py-12 text-center fade-in" style={{ animationDelay: '0.2s' }}>
+            <PlayCircle className="mb-4 h-12 w-12 text-white/40" />
+            <h3 className="mb-2 font-semibold text-lg text-white">
               {searchQuery ? 'No executions found' : 'No executions yet'}
             </h3>
-            <p className="text-gray-600 text-sm">
+            <p className="text-sm text-white/70">
               {searchQuery
                 ? 'Try adjusting your search query'
                 : 'Execute a workflow to see logs here'}
             </p>
           </div>
         ) : (
-          <Card>
-            <CardContent className="p-0">
-              <div className="divide-y">
-                {filteredExecutions.map((exec) => (
-                  <div
-                    key={exec.id}
-                    className="flex cursor-pointer items-center justify-between p-4 transition hover:bg-gray-50"
-                    onClick={() => handleViewDetails(exec.id)}
-                  >
-                    <div className="flex items-center gap-4">
-                      {getStatusIcon(exec.status)}
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="font-medium">
-                            {exec.workflow_name || exec.workflow_id}
-                          </p>
-                          {getStatusBadge(exec.status)}
-                        </div>
-                        <div className="mt-1 flex items-center gap-3 text-gray-500 text-xs">
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {formatDistanceToNow(new Date(exec.created_at), {
-                              addSuffix: true,
-                            })}
-                          </span>
-                          {exec.error_message && (
-                            <span className="text-red-600">
-                              Error: {exec.error_message.substring(0, 50)}
-                              {exec.error_message.length > 50 ? '...' : ''}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-6">
-                      <div className="text-right">
-                        <p className="text-gray-500 text-sm">Duration</p>
-                        <p className="font-medium">
-                          {formatDuration(exec.duration_ms)}
+          <div className="space-y-3">
+            {filteredExecutions.map((exec, index) => (
+              <div
+                key={exec.id}
+                className="glass-card group cursor-pointer p-6 fade-in"
+                style={{ animationDelay: `${0.2 + index * 0.05}s` }}
+                onClick={() => handleViewDetails(exec.id)}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 flex-1">
+                    {getStatusIcon(exec.status)}
+                    <div className="flex-1">
+                      <div className="mb-1 flex items-center gap-2">
+                        <p className="font-medium text-white">
+                          {exec.workflow_name || exec.workflow_id}
                         </p>
+                        {getStatusBadge(exec.status)}
                       </div>
-                      <div className="flex gap-2">
-                        {exec.status === 'running' && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => handleCancelExecution(exec.id, e)}
-                            disabled={isLoading}
-                          >
-                            <StopCircle className="mr-2 h-4 w-4" />
-                            Cancel
-                          </Button>
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-white/60">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {formatDistanceToNow(new Date(exec.created_at), {
+                            addSuffix: true,
+                          })}
+                        </span>
+                        {exec.error_message && (
+                          <span className="text-red-300">
+                            Error: {exec.error_message.substring(0, 50)}
+                            {exec.error_message.length > 50 ? '...' : ''}
+                          </span>
                         )}
-                        <Button variant="ghost" size="sm">
-                          View Details
-                        </Button>
                       </div>
                     </div>
                   </div>
-                ))}
+
+                  <div className="flex items-center gap-6">
+                    <div className="text-right">
+                      <p className="text-sm text-white/60">Duration</p>
+                      <p className="font-medium text-white">
+                        {formatDuration(exec.duration_ms)}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      {exec.status === 'running' && (
+                        <button
+                          className="glass-button px-3 py-1.5 text-sm"
+                          onClick={(e) => handleCancelExecution(exec.id, e)}
+                          disabled={isLoading}
+                        >
+                          <StopCircle className="mr-2 h-4 w-4" />
+                          Cancel
+                        </button>
+                      )}
+                      <button className="glass-button p-2">
+                        <ChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            ))}
+          </div>
         )}
       </div>
     </div>
   )
+}
+
+function cn(...classes: any[]) {
+  return classes.filter(Boolean).join(' ')
 }

@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { Settings, Users, Key, Sparkles, Link as LinkIcon, CreditCard, Trash2, Plus, Loader2 } from 'lucide-react'
 
 interface SettingsTab {
   id: string
   label: string
   description: string
+  icon: any
 }
 
 const SETTINGS_TABS: SettingsTab[] = [
@@ -12,31 +14,37 @@ const SETTINGS_TABS: SettingsTab[] = [
     id: 'general',
     label: 'General',
     description: 'Workspace name, timezone, and general settings',
+    icon: Settings,
   },
   {
     id: 'members',
     label: 'Members',
     description: 'Manage workspace members and permissions',
+    icon: Users,
   },
   {
     id: 'api-keys',
     label: 'API Keys',
     description: 'Manage API keys for your workspace',
+    icon: Key,
   },
   {
     id: 'copilot',
     label: 'Copilot',
     description: 'Configure your AI Copilot settings',
+    icon: Sparkles,
   },
   {
     id: 'integrations',
     label: 'Integrations',
     description: 'Connect external services and tools',
+    icon: LinkIcon,
   },
   {
     id: 'billing',
     label: 'Billing',
     description: 'Manage your subscription and billing',
+    icon: CreditCard,
   },
 ]
 
@@ -111,21 +119,21 @@ export default function SettingsPage() {
         return (
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Workspace Name</label>
+              <label className="mb-2 block text-sm font-medium text-white/80">Workspace Name</label>
               <input
                 type="text"
                 value={workspaceName}
                 onChange={(e) => setWorkspaceName(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="glass-input w-full"
                 placeholder="Enter workspace name"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Timezone</label>
+              <label className="mb-2 block text-sm font-medium text-white/80">Timezone</label>
               <select
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="glass-input w-full"
               >
                 <option value="UTC">UTC</option>
                 <option value="EST">Eastern Standard Time</option>
@@ -137,9 +145,16 @@ export default function SettingsPage() {
             <button
               onClick={handleSaveSettings}
               disabled={isSaving}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="glass-button bg-gradient-to-r from-purple-500/30 to-blue-500/30 px-6 py-3 font-semibold"
             >
-              {isSaving ? 'Saving...' : 'Save Settings'}
+              {isSaving ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Saving...
+                </div>
+              ) : (
+                'Save Settings'
+              )}
             </button>
           </div>
         )
@@ -147,9 +162,10 @@ export default function SettingsPage() {
       case 'members':
         return (
           <div className="space-y-6">
-            <p className="text-gray-600">Manage workspace members and their permissions.</p>
-            <div className="border border-gray-200 rounded-lg p-4">
-              <p className="text-gray-500 text-center py-8">No members configured yet</p>
+            <p className="text-white/70">Manage workspace members and their permissions.</p>
+            <div className="glass-card border-2 border-dashed border-white/20 p-8 text-center">
+              <Users className="mx-auto mb-2 h-8 w-8 text-white/40" />
+              <p className="text-white/60">No members configured yet</p>
             </div>
           </div>
         )
@@ -158,19 +174,20 @@ export default function SettingsPage() {
         return (
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Create New API Key</label>
+              <label className="mb-2 block text-sm font-medium text-white/80">Create New API Key</label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={apiKeyInput}
                   onChange={(e) => setApiKeyInput(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="glass-input flex-1"
                   placeholder="API Key Name"
                 />
                 <button
                   onClick={handleAddApiKey}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="glass-button bg-gradient-to-r from-purple-500/30 to-blue-500/30 px-6 py-3 font-semibold"
                 >
+                  <Plus className="mr-2 h-4 w-4" />
                   Add
                 </button>
               </div>
@@ -178,32 +195,34 @@ export default function SettingsPage() {
 
             {apiKeys.length > 0 ? (
               <div>
-                <h3 className="text-sm font-medium mb-4">Your API Keys</h3>
+                <h3 className="mb-4 text-sm font-medium text-white">Your API Keys</h3>
                 <div className="space-y-2">
-                  {apiKeys.map((key) => (
+                  {apiKeys.map((key, index) => (
                     <div
                       key={key.id}
-                      className="flex justify-between items-center border border-gray-200 rounded-lg p-3"
+                      className="glass-card flex items-center justify-between p-4 fade-in"
+                      style={{ animationDelay: `${index * 0.05}s` }}
                     >
                       <div>
-                        <p className="font-medium">{key.name}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="font-medium text-white">{key.name}</p>
+                        <p className="text-xs text-white/60">
                           Created {new Date(key.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                       <button
                         onClick={() => handleDeleteApiKey(key.id)}
-                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
+                        className="glass-button p-2 hover:bg-red-500/20"
                       >
-                        Delete
+                        <Trash2 className="h-4 w-4 text-red-300" />
                       </button>
                     </div>
                   ))}
                 </div>
               </div>
             ) : (
-              <div className="border border-gray-200 rounded-lg p-4">
-                <p className="text-gray-500 text-center py-8">No API keys created yet</p>
+              <div className="glass-card border-2 border-dashed border-white/20 p-8 text-center">
+                <Key className="mx-auto mb-2 h-8 w-8 text-white/40" />
+                <p className="text-white/60">No API keys created yet</p>
               </div>
             )}
           </div>
@@ -212,23 +231,24 @@ export default function SettingsPage() {
       case 'copilot':
         return (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="glass-card flex items-center justify-between p-6">
               <div>
-                <h3 className="font-medium">Enable Copilot</h3>
-                <p className="text-sm text-gray-600">Allow AI-powered assistance in workflows</p>
+                <h3 className="font-medium text-white">Enable Copilot</h3>
+                <p className="text-sm text-white/70">Allow AI-powered assistance in workflows</p>
               </div>
-              <label className="flex items-center cursor-pointer">
+              <label className="relative inline-flex cursor-pointer items-center">
                 <input
                   type="checkbox"
                   checked={copilotEnabled}
                   onChange={(e) => setCopilotEnabled(e.target.checked)}
-                  className="w-4 h-4"
+                  className="peer sr-only"
                 />
+                <div className="peer h-6 w-11 rounded-full bg-white/20 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-purple-500/50 peer-checked:after:translate-x-full peer-focus:outline-none"></div>
               </label>
             </div>
             {copilotEnabled && (
-              <div className="border-l-4 border-blue-500 bg-blue-50 p-4 rounded">
-                <p className="text-sm text-blue-900">
+              <div className="glass-card border-l-4 border-purple-500/50 bg-purple-500/10 p-4 fade-in">
+                <p className="text-sm text-purple-200">
                   Copilot is enabled. You can now use AI-powered assistance when building workflows.
                 </p>
               </div>
@@ -236,9 +256,16 @@ export default function SettingsPage() {
             <button
               onClick={handleSaveSettings}
               disabled={isSaving}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="glass-button bg-gradient-to-r from-purple-500/30 to-blue-500/30 px-6 py-3 font-semibold"
             >
-              {isSaving ? 'Saving...' : 'Save Settings'}
+              {isSaving ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Saving...
+                </div>
+              ) : (
+                'Save Settings'
+              )}
             </button>
           </div>
         )
@@ -246,9 +273,10 @@ export default function SettingsPage() {
       case 'integrations':
         return (
           <div className="space-y-6">
-            <p className="text-gray-600">Configure external service integrations.</p>
-            <div className="border border-gray-200 rounded-lg p-4">
-              <p className="text-gray-500 text-center py-8">No integrations configured yet</p>
+            <p className="text-white/70">Configure external service integrations.</p>
+            <div className="glass-card border-2 border-dashed border-white/20 p-8 text-center">
+              <LinkIcon className="mx-auto mb-2 h-8 w-8 text-white/40" />
+              <p className="text-white/60">No integrations configured yet</p>
             </div>
           </div>
         )
@@ -256,9 +284,10 @@ export default function SettingsPage() {
       case 'billing':
         return (
           <div className="space-y-6">
-            <p className="text-gray-600">Manage your subscription and billing information.</p>
-            <div className="border border-gray-200 rounded-lg p-4">
-              <p className="text-gray-500 text-center py-8">No billing information available</p>
+            <p className="text-white/70">Manage your subscription and billing information.</p>
+            <div className="glass-card border-2 border-dashed border-white/20 p-8 text-center">
+              <CreditCard className="mx-auto mb-2 h-8 w-8 text-white/40" />
+              <p className="text-white/60">No billing information available</p>
             </div>
           </div>
         )
@@ -269,45 +298,53 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="flex-1 overflow-auto">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Workspace Settings</h1>
-          <p className="text-gray-600 mt-2">ID · {workspaceId}</p>
+        <div className="mb-8 fade-in">
+          <h1 className="font-bold text-3xl text-white">Workspace Settings</h1>
+          <p className="mt-2 text-white/60">ID · {workspaceId}</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           {/* Sidebar Navigation */}
           <div className="lg:col-span-1">
-            <nav className="space-y-1">
-              {SETTINGS_TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === tab.id
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <div className="font-medium text-sm">{tab.label}</div>
-                  <div
-                    className={`text-xs mt-1 ${
-                      activeTab === tab.id ? 'text-blue-100' : 'text-gray-500'
-                    }`}
+            <nav className="glass-card space-y-1 p-2 fade-in" style={{ animationDelay: '0.1s' }}>
+              {SETTINGS_TABS.map((tab, index) => {
+                const Icon = tab.icon
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={cn(
+                      'flex w-full items-start gap-3 rounded-lg px-4 py-3 text-left transition-all',
+                      activeTab === tab.id
+                        ? 'bg-gradient-to-r from-purple-500/30 to-blue-500/30 text-white'
+                        : 'text-white/70 hover:bg-white/10 hover:text-white'
+                    )}
                   >
-                    {tab.description}
-                  </div>
-                </button>
-              ))}
+                    <Icon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                    <div className="flex-1">
+                      <div className="text-sm font-medium">{tab.label}</div>
+                      <div
+                        className={cn(
+                          'mt-0.5 text-xs',
+                          activeTab === tab.id ? 'text-white/80' : 'text-white/50'
+                        )}
+                      >
+                        {tab.description}
+                      </div>
+                    </div>
+                  </button>
+                )
+              })}
             </nav>
           </div>
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-lg shadow-sm p-8">
-              <h2 className="text-2xl font-bold mb-6">
+            <div className="glass-card p-8 fade-in" style={{ animationDelay: '0.2s' }}>
+              <h2 className="mb-6 font-bold text-2xl text-white">
                 {SETTINGS_TABS.find((tab) => tab.id === activeTab)?.label}
               </h2>
               {renderTabContent()}
@@ -317,4 +354,8 @@ export default function SettingsPage() {
       </div>
     </div>
   )
+}
+
+function cn(...classes: any[]) {
+  return classes.filter(Boolean).join(' ')
 }
