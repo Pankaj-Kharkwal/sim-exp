@@ -1,0 +1,188 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: pankh-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pankh_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pankh-network
+
+  # Redis Cache & Message Broker
+  redis:
+    image: redis:7-alpine
+    container_name: pankh-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - pankh-network
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    container_name: pankh-backend
+    environment:
+      # Database
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/pankh_ai
+
+      # Redis
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+
+      # App Settings
+      PROJECT_NAME: "Pankh.AI"
+      VERSION: "0.1.0"
+      API_V1_STR: "/api/v1"
+      HOST: "0.0.0.0"
+      PORT: "8000"
+      RELOAD: "true"
+      WORKERS: "1"
+      LOG_LEVEL: "info"
+
+      # Security
+      SECRET_KEY: "your-secret-key-change-this-in-production"
+      ALGORITHM: "HS256"
+      ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+
+      # CORS
+      CORS_ORIGINS: '["http://localhost:5173","http://localhost:3000","http://frontend:5173"]'
+
+      # Optional: AI Provider Keys (add as needed)
+      # OPENAI_API_KEY: ""
+      # ANTHROPIC_API_KEY: ""
+
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./services/backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - pankh-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Celery Worker
+  celery-worker:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    container_name: pankh-celery-worker
+    environment:
+      # Database
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/pankh_ai
+
+      # Redis
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+
+      # App Settings
+      LOG_LEVEL: "info"
+
+      # Security
+      SECRET_KEY: "your-secret-key-change-this-in-production"
+
+    volumes:
+      - ./services/backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    command: celery -A app.workers.celery_app worker --loglevel=info --concurrency=4
+    networks:
+      - pankh-network
+
+  # Celery Beat (Scheduler)
+  celery-beat:
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile
+    container_name: pankh-celery-beat
+    environment:
+      # Database
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/pankh_ai
+
+      # Redis
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+
+      # App Settings
+      LOG_LEVEL: "info"
+
+      # Security
+      SECRET_KEY: "your-secret-key-change-this-in-production"
+
+    volumes:
+      - ./services/backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    command: celery -A app.workers.celery_app beat --loglevel=info
+    networks:
+      - pankh-network
+
+  # React + Vite Frontend
+  frontend:
+    build:
+      context: ./services/frontend
+      dockerfile: Dockerfile.dev
+    container_name: pankh-frontend
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+      VITE_WS_URL: ws://localhost:8000
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./services/frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - pankh-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  pankh-network:
+    driver: bridge
