@@ -99,6 +99,67 @@
 }
 
 /**
+ * New design system animations
+ */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes dash-flow {
+  to { stroke-dashoffset: -20; }
+}
+
+@keyframes pulse-ring {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
+
+/**
  * Dark color tokens - single source of truth for all colors (dark-only)
  */
 @layer base {
@@ -142,6 +203,56 @@
     --brand-secondary: #33b4ff;
     --brand-tertiary: #22c55e;
     --warning: #ff6600;
+
+    /* New Primary/Secondary/Accent system */
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --primary-active: #4338ca;
+    --primary-light: #eef2ff;
+
+    --secondary: #8b5cf6;
+    --secondary-hover: #7c3aed;
+    --secondary-active: #6d28d9;
+    --secondary-light: #f5f3ff;
+
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-light: #eff6ff;
+
+    /* Semantic States */
+    --success: #22c55e;
+    --success-bg: #f0fdf4;
+    --success-border: #86efac;
+
+    --warning-semantic: #f59e0b;
+    --warning-bg: #fffbeb;
+    --warning-border: #fcd34d;
+
+    --error: #ef4444;
+    --error-bg: #fef2f2;
+    --error-border: #fca5a5;
+
+    --info: #3b82f6;
+    --info-bg: #eff6ff;
+    --info-border: #93c5fd;
+
+    /* Workflow Node Colors */
+    --node-agent: #8b5cf6;
+    --node-api: #3b82f6;
+    --node-data: #22c55e;
+    --node-logic: #f59e0b;
+    --node-trigger: #ec4899;
+    --node-integration: #06b6d4;
+
+    /* Shadows */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+    --shadow-focus: 0 0 0 3px var(--primary-light);
 
     /* Utility */
     --white: #ffffff;
@@ -257,6 +368,56 @@
     --brand-tertiary: #22c55e;
     --warning: #ff6600;
 
+    /* New Primary/Secondary/Accent system (same as light) */
+    --primary: #6366f1;
+    --primary-hover: #818cf8;
+    --primary-active: #a5b4fc;
+    --primary-light: #1e1b4b;
+
+    --secondary: #8b5cf6;
+    --secondary-hover: #a78bfa;
+    --secondary-active: #c4b5fd;
+    --secondary-light: #2e1065;
+
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --accent-light: #1e3a8a;
+
+    /* Semantic States (darker backgrounds for dark mode) */
+    --success: #22c55e;
+    --success-bg: #14532d;
+    --success-border: #166534;
+
+    --warning-semantic: #f59e0b;
+    --warning-bg: #451a03;
+    --warning-border: #78350f;
+
+    --error: #ef4444;
+    --error-bg: #450a0a;
+    --error-border: #7f1d1d;
+
+    --info: #3b82f6;
+    --info-bg: #1e3a8a;
+    --info-border: #1e40af;
+
+    /* Workflow Node Colors (same as light) */
+    --node-agent: #8b5cf6;
+    --node-api: #3b82f6;
+    --node-data: #22c55e;
+    --node-logic: #f59e0b;
+    --node-trigger: #ec4899;
+    --node-integration: #06b6d4;
+
+    /* Shadows (stronger for dark mode) */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.6);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.7), 0 8px 10px -6px rgb(0 0 0 / 0.7);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.8);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.1);
+    --shadow-focus: 0 0 0 3px var(--primary-light);
+
     /* Utility */
     --white: #ffffff;
 
@@ -343,7 +504,13 @@
     overscroll-behavior-x: none;
   }
 
-  *:focus {
+  /* Focus states for accessibility */
+  *:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  *:focus:not(:focus-visible) {
     outline: none;
   }
 
@@ -416,6 +583,30 @@
 
   .copilot-scrollable {
     scrollbar-gutter: stable;
+  }
+
+  /* Reduced motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* High contrast mode for accessibility */
+  @media (prefers-contrast: high) {
+    :root {
+      --border: #000000;
+      --text-primary: #000000;
+    }
+
+    .dark {
+      --border: #ffffff;
+      --text-primary: #ffffff;
+    }
   }
 }
 

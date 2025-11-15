@@ -20,6 +20,7 @@ export default {
         base: '15px', // Override default 16px to 15px
       },
       colors: {
+        // Legacy shadcn colors (keep for backward compatibility)
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -30,27 +31,14 @@ export default {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
         },
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
-        },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
         },
-        border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         chart: {
@@ -77,11 +65,104 @@ export default {
           900: '#171717',
           950: '#0a0a0a',
         },
+
+        // New design system colors
+        bg: {
+          DEFAULT: 'var(--bg)',
+          subtle: 'var(--bg-subtle)',
+          muted: 'var(--bg-muted)',
+          hover: 'var(--bg-hover)',
+          active: 'var(--bg-active)',
+        },
+        surface: {
+          1: 'var(--surface-1)',
+          2: 'var(--surface-2)',
+          3: 'var(--surface-3)',
+          4: 'var(--surface-4)',
+          5: 'var(--surface-5)',
+          6: 'var(--surface-6)',
+          9: 'var(--surface-9)',
+          11: 'var(--surface-11)',
+          12: 'var(--surface-12)',
+          13: 'var(--surface-13)',
+          14: 'var(--surface-14)',
+          15: 'var(--surface-15)',
+        },
+        text: {
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          tertiary: 'var(--text-tertiary)',
+          muted: 'var(--text-muted)',
+          subtle: 'var(--text-subtle)',
+        },
+        border: {
+          DEFAULT: 'var(--border)',
+          strong: 'var(--border-strong)',
+          muted: 'var(--border-muted)',
+        },
+        primary: {
+          DEFAULT: 'var(--primary)',
+          hover: 'var(--primary-hover)',
+          active: 'var(--primary-active)',
+          light: 'var(--primary-light)',
+          foreground: 'hsl(var(--primary-foreground))', // Keep for shadcn compat
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          hover: 'var(--secondary-hover)',
+          active: 'var(--secondary-active)',
+          light: 'var(--secondary-light)',
+          foreground: 'hsl(var(--secondary-foreground))', // Keep for shadcn compat
+        },
+        accent: {
+          DEFAULT: 'var(--accent)',
+          hover: 'var(--accent-hover)',
+          light: 'var(--accent-light)',
+          foreground: 'hsl(var(--accent-foreground))', // Keep for shadcn compat
+        },
+        success: {
+          DEFAULT: 'var(--success)',
+          bg: 'var(--success-bg)',
+          border: 'var(--success-border)',
+        },
+        warning: {
+          DEFAULT: 'var(--warning-semantic)',
+          bg: 'var(--warning-bg)',
+          border: 'var(--warning-border)',
+        },
+        error: {
+          DEFAULT: 'var(--error)',
+          bg: 'var(--error-bg)',
+          border: 'var(--error-border)',
+        },
+        info: {
+          DEFAULT: 'var(--info)',
+          bg: 'var(--info-bg)',
+          border: 'var(--info-border)',
+        },
+        node: {
+          agent: 'var(--node-agent)',
+          api: 'var(--node-api)',
+          data: 'var(--node-data)',
+          logic: 'var(--node-logic)',
+          trigger: 'var(--node-trigger)',
+          integration: 'var(--node-integration)',
+        },
       },
       fontWeight: {
         base: '450',
         medium: '480',
         semibold: '550',
+      },
+      boxShadow: {
+        xs: 'var(--shadow-xs)',
+        sm: 'var(--shadow-sm)',
+        md: 'var(--shadow-md)',
+        lg: 'var(--shadow-lg)',
+        xl: 'var(--shadow-xl)',
+        '2xl': 'var(--shadow-2xl)',
+        inner: 'var(--shadow-inner)',
+        focus: 'var(--shadow-focus)',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -150,6 +231,58 @@ export default {
             opacity: '0.6',
           },
         },
+        // New design system animations
+        'fade-in': {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        'slide-up': {
+          from: {
+            opacity: '0',
+            transform: 'translateY(8px)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+        'slide-down': {
+          from: {
+            opacity: '0',
+            transform: 'translateY(-8px)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+        'scale-in': {
+          from: {
+            opacity: '0',
+            transform: 'scale(0.95)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'scale(1)',
+          },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-1000px 0' },
+          '100%': { backgroundPosition: '1000px 0' },
+        },
+        'dash-flow': {
+          to: { strokeDashoffset: '-20' },
+        },
+        'pulse-ring': {
+          '0%, 100%': {
+            opacity: '1',
+            transform: 'scale(1)',
+          },
+          '50%': {
+            opacity: '0.5',
+            transform: 'scale(1.1)',
+          },
+        },
       },
       animation: {
         'caret-blink': 'caret-blink 1.25s ease-out infinite',
@@ -159,6 +292,14 @@ export default {
         'code-shimmer': 'code-shimmer 1.5s infinite',
         'placeholder-pulse': 'placeholder-pulse 1.5s ease-in-out infinite',
         'ring-pulse': 'ring-pulse 1.5s ease-in-out infinite',
+        // New design system animations
+        'fade-in': 'fade-in 0.2s ease-out',
+        'slide-up': 'slide-up 0.3s ease-out',
+        'slide-down': 'slide-down 0.3s ease-out',
+        'scale-in': 'scale-in 0.2s ease-out',
+        shimmer: 'shimmer 2s linear infinite',
+        'dash-flow': 'dash-flow 20s linear infinite',
+        'pulse-ring': 'pulse-ring 2s ease-in-out infinite',
       },
     },
   },
