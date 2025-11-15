@@ -56,7 +56,10 @@ export default function WorkspacePage() {
 
   return (
     <PageContainer>
-      <div className="flex h-screen">
+      {/* Aurora Background */}
+      <div className="aurora-background" />
+
+      <div className="flex h-screen relative z-10">
         {/* Modular Sidebar */}
         <Sidebar
           logo={<SidebarLogo title="Sim Workspace" icon={<Sparkles className="h-5 w-5 text-white" />} />}
