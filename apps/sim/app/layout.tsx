@@ -9,6 +9,8 @@ import '@/app/globals.css'
 import { OneDollarStats } from '@/components/analytics/onedollarstats'
 import { SessionProvider } from '@/lib/session/session-context'
 import { season } from '@/app/fonts/season/season'
+import { inter } from '@/app/fonts/inter/inter'
+import { jetbrainsMono } from '@/app/fonts/jetbrains-mono/jetbrains-mono'
 import { HydrationErrorHandler } from '@/app/hydration-error-handler'
 import { QueryProvider } from '@/app/providers/query-client-provider'
 import { ThemeProvider } from '@/app/theme-provider'
@@ -169,7 +171,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <PublicEnvScript />
       </head>
-      <body className={`${season.variable} font-season`} suppressHydrationWarning>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} ${season.variable} font-sans antialiased`} suppressHydrationWarning>
         <HydrationErrorHandler />
         <OneDollarStats />
         <PostHogProvider>
