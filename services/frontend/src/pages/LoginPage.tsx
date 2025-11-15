@@ -40,38 +40,38 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated background orbs */}
-      <div className="parallax-bg" />
+      {/* Aurora background */}
+      <div className="aurora-background" />
 
       {/* Main login card */}
-      <div className="glass-modal w-full max-w-md p-10 animate-scaleIn relative">
+      <div className="glass-card w-full max-w-md p-10 fade-in relative">
         {/* Logo and header */}
         <div className="text-center mb-10">
           <div className="inline-block mb-4">
-            <div className="w-16 h-16 rounded-2xl gradient-animated flex items-center justify-center mx-auto shadow-lg">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/40 to-blue-500/40 flex items-center justify-center mx-auto shadow-lg shimmer">
               <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
           </div>
-          <h1 className="text-heading-1 text-gradient mb-3 animate-slideIn">Pankh.AI</h1>
-          <p className="text-body animate-slideIn delay-100">Welcome back! Sign in to continue your journey</p>
+          <h1 className="text-3xl font-bold text-white mb-3 slide-in">Pankh.AI</h1>
+          <p className="text-white/70 slide-in" style={{ animationDelay: '0.1s' }}>Welcome back! Sign in to continue your journey</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
           {error && (
-            <div className="glass-card-enhanced border-2 border-red-500/30 bg-red-500/10 p-4 rounded-xl animate-slideIn">
+            <div className="glass-card border-2 border-red-500/30 bg-red-500/10 p-4 rounded-xl fade-in">
               <div className="flex items-center gap-3">
-                <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-sm font-medium text-red-600 dark:text-red-400">{error}</p>
+                <p className="text-sm font-medium text-red-200">{error}</p>
               </div>
             </div>
           )}
 
-          <div className="space-y-2 animate-slideIn delay-200">
-            <label htmlFor="email" className="text-sm font-medium text-secondary block">Email Address</label>
+          <div className="space-y-2 fade-in" style={{ animationDelay: '0.2s' }}>
+            <label htmlFor="email" className="text-sm font-medium text-white/80 block">Email Address</label>
             <input
               id="email"
               type="email"
@@ -80,12 +80,12 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={isLoading}
-              className="input transition-all focus:scale-[1.01]"
+              className="glass-input w-full h-12"
             />
           </div>
 
-          <div className="space-y-2 animate-slideIn delay-300">
-            <label htmlFor="password" className="text-sm font-medium text-secondary block">Password</label>
+          <div className="space-y-2 fade-in" style={{ animationDelay: '0.3s' }}>
+            <label htmlFor="password" className="text-sm font-medium text-white/80 block">Password</label>
             <input
               id="password"
               type="password"
@@ -94,13 +94,14 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={isLoading}
-              className="input transition-all focus:scale-[1.01]"
+              className="glass-input w-full h-12"
             />
           </div>
 
           <button
             type="submit"
-            className="btn btn-primary btn-ripple w-full mt-6 h-12 font-semibold text-base shadow-xl hover:shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98] animate-slideIn delay-400"
+            className="glass-button w-full mt-6 h-12 font-semibold text-base bg-gradient-to-r from-purple-500/30 to-blue-500/30 disabled:opacity-50 fade-in"
+            style={{ animationDelay: '0.4s' }}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -115,40 +116,40 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-8 text-center animate-slideIn delay-500">
+        <div className="mt-8 text-center fade-in" style={{ animationDelay: '0.5s' }}>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-subtle"></div>
+              <div className="w-full border-t border-white/20"></div>
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white/50 dark:bg-black/50 px-4 text-tertiary backdrop-blur-sm rounded-full">
+              <span className="bg-white/10 px-4 text-white/60 backdrop-blur-sm rounded-full">
                 or
               </span>
             </div>
           </div>
         </div>
 
-        <div className="mt-6 text-center animate-slideIn delay-600">
-          <span className="text-body">Don't have an account? </span>
+        <div className="mt-6 text-center fade-in" style={{ animationDelay: '0.6s' }}>
+          <span className="text-white/70">Don't have an account? </span>
           <Link
             to="/signup"
-            className="font-semibold text-gradient underline-offset-4 transition hover:underline"
+            className="font-semibold text-white underline-offset-4 transition hover:underline"
           >
             Create one now
           </Link>
         </div>
 
-        <div className="mt-8 glass-card-enhanced p-5 rounded-xl animate-slideIn delay-700">
-          <p className="text-small font-medium text-center mb-3 text-secondary">✨ Demo Accounts</p>
+        <div className="mt-8 glass-card p-5 rounded-xl fade-in" style={{ animationDelay: '0.7s' }}>
+          <p className="text-sm font-medium text-center mb-3 text-white/80">✨ Demo Accounts</p>
           <div className="space-y-2">
             <div className="glass-button p-3 rounded-lg text-center hover:scale-[1.02] transition-all cursor-pointer" onClick={() => { setEmail('admin@pankh.ai'); setPassword('admin123'); }}>
-              <p className="text-xs font-mono text-primary">admin@pankh.ai / admin123</p>
+              <p className="text-xs font-mono text-white">admin@pankh.ai / admin123</p>
             </div>
             <div className="glass-button p-3 rounded-lg text-center hover:scale-[1.02] transition-all cursor-pointer" onClick={() => { setEmail('demo@pankh.ai'); setPassword('admin123'); }}>
-              <p className="text-xs font-mono text-primary">demo@pankh.ai / admin123</p>
+              <p className="text-xs font-mono text-white">demo@pankh.ai / admin123</p>
             </div>
             <div className="glass-button p-3 rounded-lg text-center hover:scale-[1.02] transition-all cursor-pointer" onClick={() => { setEmail('user@pankh.ai'); setPassword('admin123'); }}>
-              <p className="text-xs font-mono text-primary">user@pankh.ai / admin123</p>
+              <p className="text-xs font-mono text-white">user@pankh.ai / admin123</p>
             </div>
           </div>
         </div>

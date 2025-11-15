@@ -21,8 +21,8 @@ export default function LandingPage() {
   useAOS()
 
   return (
-    <div className='relative min-h-screen bg-transparent text-brand-peacock'>
-      <div className='parallax-bg' aria-hidden='true' />
+    <div className='relative min-h-screen bg-transparent text-white'>
+      <div className='aurora-background' aria-hidden='true' />
       <LandingNav />
       <main className='relative z-10 flex flex-col gap-20 pb-20'>
         <Hero />
